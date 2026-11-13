@@ -4,17 +4,16 @@ import * as THREE from 'three'
 import { useGameStore } from '../store'
 
 const LANE_WIDTH = 3
-const LANES = [-LANE_WIDTH, 0, LANE_WIDTH] // left, center, right
+const LANES = [-LANE_WIDTH, 0, LANE_WIDTH]
 
 export default function Player() {
   const meshRef = useRef<THREE.Mesh>(null)
-  const laneIndex = useRef(1) // start in center
+  const laneIndex = useRef(1)
   const targetX = useRef(0)
   const velocityY = useRef(0)
   const isGrounded = useRef(true)
-  const { speed, isPlaying, addScore, gameOver } = useGameStore()
+  const { speed, isPlaying, addScore } = useGameStore()
 
-  // Keyboard controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isPlaying) return
@@ -28,7 +27,7 @@ export default function Player() {
         targetX.current = LANES[laneIndex.current]
       }
       if ((e.code === 'Space' || e.code === 'KeyW' || e.code === 'ArrowUp') && isGrounded.current) {
-        velocityY.current = 12
+        velocityY.current = 11
         isGrounded.current = false
       }
     }
@@ -40,18 +39,18 @@ export default function Player() {
   useFrame((_, delta) => {
     if (!meshRef.current || !isPlaying) return
 
-    // Move forward
+    // Forward movement
     meshRef.current.position.z -= speed * delta
 
-    // Smooth lane change
+    // Smooth lane switch
     meshRef.current.position.x = THREE.MathUtils.lerp(
       meshRef.current.position.x,
       targetX.current,
-      12 * delta
+      14 * delta
     )
 
-    // Jump physics
-    velocityY.current -= 30 * delta // gravity
+    // Jump
+    velocityY.current -= 28 * delta
     meshRef.current.position.y += velocityY.current * delta
 
     if (meshRef.current.position.y <= 1) {
@@ -60,14 +59,13 @@ export default function Player() {
       isGrounded.current = true
     }
 
-    // Add score based on distance
-    addScore(speed * delta * 0.5)
+    addScore(speed * delta * 0.4)
   })
 
   return (
     <mesh ref={meshRef} position={[0, 1, 0]} castShadow>
-      <boxGeometry args={[1, 1.6, 1]} />
-      <meshStandardMaterial color="#ff4444" />
+      <boxGeometry args={[1, 1.5, 1]} />
+      <meshStandardMaterial color="#e63946" />
     </mesh>
   )
 }
