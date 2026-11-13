@@ -42,14 +42,14 @@ export default function Player() {
     // Forward movement
     meshRef.current.position.z -= speed * delta
 
-    // Smooth lane switch
+    // Smooth lane change
     meshRef.current.position.x = THREE.MathUtils.lerp(
       meshRef.current.position.x,
       targetX.current,
       14 * delta
     )
 
-    // Jump
+    // Jump physics
     velocityY.current -= 28 * delta
     meshRef.current.position.y += velocityY.current * delta
 
