@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type RefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -33,7 +33,7 @@ function TrackSegment({ z }: { z: number }) {
 }
 
 interface TrackProps {
-  playerRef: React.RefObject<THREE.Group | null>
+  playerRef: RefObject<THREE.Group | null>
 }
 
 export default function Track({ playerRef }: TrackProps) {
